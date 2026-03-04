@@ -1,0 +1,13 @@
+.env
+venv/
+__pycache__/
+*.db
+uploads/*
+!uploads/.gitkeep
+instance/
+.vscode/
+.idea/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store

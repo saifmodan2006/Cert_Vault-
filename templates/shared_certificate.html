@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ cert.title }} – Shared Certificate{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="cert-detail animate-fade-up">
+        <div class="cert-detail-header">
+            <span class="badge badge-share"><i class="fas fa-globe"></i> Publicly Shared</span>
+        </div>
+        <div class="cert-detail-body">
+            <div class="cert-preview">
+                {% set ext = cert.original_filename.rsplit('.',1)[-1].lower() %}
+                {% if ext == 'pdf' %}
+                <iframe src="{{ url_for('serve_shared_file', shareable_id=cert.shareable_id) }}"
+                    class="pdf-preview"></iframe>
+                {% else %}
+                <img src="{{ url_for('serve_shared_file', shareable_id=cert.shareable_id) }}" alt="{{ cert.title }}"
+                    class="img-preview">
+                {% endif %}
+            </div>
+            <div class="cert-info">
+                <h1>{{ cert.title }}</h1>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-building"></i> Issuer</span>
+                        <span class="info-value">{{ cert.issuer }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-calendar"></i> Issued</span>
+                        <span class="info-value">{{ cert.issue_date.strftime('%B %d, %Y') }}</span>
+                    </div>
+                    {% if cert.expiry_date %}
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-calendar-xmark"></i> Expires</span>
+                        <span class="info-value">{{ cert.expiry_date.strftime('%B %d, %Y') }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% if cert.description %}
+                <div class="info-desc">
+                    <h4>Description</h4>
+                    <p>{{ cert.description }}</p>
+                </div>
+                {% endif %}
+                {% if cert.tags %}
+                <div class="cert-tags">
+                    {% for tag in cert.tags.split(',') %}
+                    <span class="tag">{{ tag.strip() }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <p class="shared-by">Shared via <strong>CertVault</strong></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

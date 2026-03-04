@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Activity Log – CertVault{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="page-header animate-fade-up">
+        <h1><i class="fas fa-clock-rotate-left"></i> Activity Log</h1>
+        <p>Track your recent actions</p>
+    </div>
+    {% if logs %}
+    <div class="activity-list animate-fade-up">
+        {% for log in logs %}
+        <div class="activity-item" style="animation-delay:{{ loop.index0 * 0.03 }}s">
+            <div class="activity-icon">
+                {% if 'Uploaded' in log.action %}
+                <i class="fas fa-cloud-arrow-up"></i>
+                {% elif 'Deleted' in log.action %}
+                <i class="fas fa-trash"></i>
+                {% elif 'Edited' in log.action %}
+                <i class="fas fa-edit"></i>
+                {% elif 'Logged' in log.action %}
+                <i class="fas fa-sign-in-alt"></i>
+                {% elif 'Sharing' in log.action %}
+                <i class="fas fa-share-nodes"></i>
+                {% else %}
+                <i class="fas fa-circle-dot"></i>
+                {% endif %}
+            </div>
+            <div class="activity-content">
+                <p>{{ log.action }}</p>
+                <span class="activity-time">{{ log.timestamp.strftime('%b %d, %Y at %I:%M %p') }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state animate-fade-up">
+        <i class="fas fa-clipboard-list"></i>
+        <h3>No activity yet</h3>
+        <p>Your actions will appear here.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

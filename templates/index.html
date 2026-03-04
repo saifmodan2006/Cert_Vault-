@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}CertVault – Secure Certificate Management{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content animate-fade-up">
+        <h1 class="hero-title">Your Certificates,<br><span class="gradient-text">Secured Forever.</span></h1>
+        <p class="hero-subtitle">Upload, organize, and share your professional certificates with military-grade
+            security. Never lose an important document again.</p>
+        <div class="hero-actions">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg"><i class="fas fa-rocket"></i> Get Started
+                Free</a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline btn-lg"><i class="fas fa-sign-in-alt"></i> Sign
+                In</a>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2 class="section-title">Why <span class="gradient-text">CertVault</span>?</h2>
+        <div class="features-grid">
+            <div class="feature-card animate-fade-up">
+                <div class="feature-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+                <h3>Secure Upload</h3>
+                <p>Upload PDF & image certificates with encrypted storage. Your files are safe with us.</p>
+            </div>
+            <div class="feature-card animate-fade-up" style="animation-delay:.1s">
+                <div class="feature-icon"><i class="fas fa-share-nodes"></i></div>
+                <h3>Easy Sharing</h3>
+                <p>Generate shareable links for recruiters, employers, or anyone who needs to verify.</p>
+            </div>
+            <div class="feature-card animate-fade-up" style="animation-delay:.2s">
+                <div class="feature-icon"><i class="fas fa-tags"></i></div>
+                <h3>Smart Tags</h3>
+                <p>Organize certificates with tags and powerful search. Find anything in seconds.</p>
+            </div>
+            <div class="feature-card animate-fade-up" style="animation-delay:.3s">
+                <div class="feature-icon"><i class="fas fa-bell"></i></div>
+                <h3>Expiry Alerts</h3>
+                <p>Track expiry dates and get alerts so you can renew certificates on time.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

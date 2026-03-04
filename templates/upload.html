@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Upload Certificate – CertVault{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="form-page animate-fade-up">
+        <div class="form-header">
+            <h1><i class="fas fa-cloud-arrow-up"></i> Upload Certificate</h1>
+            <p>Add a new certificate to your vault</p>
+        </div>
+        <form method="POST" enctype="multipart/form-data" class="cert-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="title">Certificate Title *</label>
+                    <input type="text" id="title" name="title" required placeholder="e.g. AWS Solutions Architect">
+                </div>
+                <div class="form-group">
+                    <label for="issuer">Issuing Organization *</label>
+                    <input type="text" id="issuer" name="issuer" required placeholder="e.g. Amazon Web Services">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3"
+                    placeholder="Brief description of the certificate..."></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="issue_date">Issue Date *</label>
+                    <input type="date" id="issue_date" name="issue_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="expiry_date">Expiry Date</label>
+                    <input type="date" id="expiry_date" name="expiry_date">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="tags">Tags <small>(comma separated)</small></label>
+                <input type="text" id="tags" name="tags" placeholder="e.g. Cloud, AWS, Professional">
+            </div>
+            <div class="form-group">
+                <label for="file">Certificate File * <small>(PDF, PNG, JPG, GIF, WEBP – max 16MB)</small></label>
+                <div class="file-upload" id="fileUploadArea">
+                    <i class="fas fa-cloud-arrow-up"></i>
+                    <p>Drag & drop or <span class="link">browse</span></p>
+                    <input type="file" id="file" name="file" required accept=".pdf,.png,.jpg,.jpeg,.gif,.webp">
+                    <span class="file-name" id="fileName"></span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-upload"></i> Upload
+                Certificate</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    const fileInput = document.getElementById('file');
+    const fileName = document.getElementById('fileName');
+    const area = document.getElementById('fileUploadArea');
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) fileName.textContent = fileInput.files[0].name;
+    });
+    area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('dragover'); });
+    area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+    area.addEventListener('drop', e => {
+        e.preventDefault(); area.classList.remove('dragover');
+        fileInput.files = e.dataTransfer.files;
+        if (fileInput.files.length) fileName.textContent = fileInput.files[0].name;
+    });
+</script>
+{% endblock %}

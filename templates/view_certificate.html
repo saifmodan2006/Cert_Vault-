@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}{{ cert.title }} – CertVault{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="cert-detail animate-fade-up">
+        <div class="cert-detail-header">
+            <div>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline"><i class="fas fa-arrow-left"></i>
+                    Back</a>
+            </div>
+            <div class="cert-detail-actions">
+                <a href="{{ url_for('edit_certificate', cert_id=cert.id) }}" class="btn btn-sm btn-secondary"><i
+                        class="fas fa-edit"></i> Edit</a>
+                <a href="{{ url_for('download_certificate', cert_id=cert.id) }}" class="btn btn-sm btn-primary"><i
+                        class="fas fa-download"></i> Download</a>
+                <form method="POST" action="{{ url_for('toggle_share', cert_id=cert.id) }}" style="display:inline">
+                    <button type="submit"
+                        class="btn btn-sm {% if cert.is_public %}btn-warning{% else %}btn-outline{% endif %}">
+                        <i class="fas fa-{% if cert.is_public %}link-slash{% else %}share-nodes{% endif %}"></i>
+                        {% if cert.is_public %}Disable Sharing{% else %}Enable Sharing{% endif %}
+                    </button>
+                </form>
+                <form method="POST" action="{{ url_for('delete_certificate', cert_id=cert.id) }}"
+                    onsubmit="return confirm('Delete this certificate permanently?')" style="display:inline">
+                    <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="cert-detail-body">
+            <div class="cert-preview">
+                {% set ext = cert.original_filename.rsplit('.',1)[-1].lower() %}
+                {% if ext == 'pdf' %}
+                <iframe src="{{ url_for('serve_upload', filepath=cert.file_path) }}" class="pdf-preview"></iframe>
+                {% else %}
+                <img src="{{ url_for('serve_upload', filepath=cert.file_path) }}" alt="{{ cert.title }}"
+                    class="img-preview">
+                {% endif %}
+            </div>
+            <div class="cert-info">
+                <h1>{{ cert.title }}</h1>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-building"></i> Issuer</span>
+                        <span class="info-value">{{ cert.issuer }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-calendar"></i> Issued</span>
+                        <span class="info-value">{{ cert.issue_date.strftime('%B %d, %Y') }}</span>
+                    </div>
+                    {% if cert.expiry_date %}
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-calendar-xmark"></i> Expires</span>
+                        <span class="info-value">{{ cert.expiry_date.strftime('%B %d, %Y') }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="info-item">
+                        <span class="info-label"><i class="fas fa-file"></i> File</span>
+                        <span class="info-value">{{ cert.original_filename }}</span>
+                    </div>
+                </div>
+                {% if cert.description %}
+                <div class="info-desc">
+                    <h4>Description</h4>
+                    <p>{{ cert.description }}</p>
+                </div>
+                {% endif %}
+                {% if cert.tags %}
+                <div class="cert-tags">
+                    {% for tag in cert.tags.split(',') %}
+                    <span class="tag">{{ tag.strip() }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if cert.is_public %}
+                <div class="share-box">
+                    <h4><i class="fas fa-share-nodes"></i> Share Link</h4>
+                    <div class="share-link-row">
+                        <input type="text" readonly id="shareLink"
+                            value="{{ request.url_root }}shared/{{ cert.shareable_id }}">
+                        <button class="btn btn-sm btn-primary" onclick="copyShareLink()"><i class="fas fa-copy"></i>
+                            Copy</button>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    function copyShareLink() {
+        const inp = document.getElementById('shareLink');
+        inp.select();
+        navigator.clipboard.writeText(inp.value);
+        const btn = inp.nextElementSibling;
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i> Copy', 2000);
+    }
+</script>
+{% endblock %}

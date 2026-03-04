@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ cert.title }} – CertVault{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="form-page animate-fade-up">
+        <div class="form-header">
+            <h1><i class="fas fa-edit"></i> Edit Certificate</h1>
+            <p>Update your certificate details</p>
+        </div>
+        <form method="POST" enctype="multipart/form-data" class="cert-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="title">Certificate Title *</label>
+                    <input type="text" id="title" name="title" required value="{{ cert.title }}">
+                </div>
+                <div class="form-group">
+                    <label for="issuer">Issuing Organization *</label>
+                    <input type="text" id="issuer" name="issuer" required value="{{ cert.issuer }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3">{{ cert.description or '' }}</textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="issue_date">Issue Date *</label>
+                    <input type="date" id="issue_date" name="issue_date" required
+                        value="{{ cert.issue_date.strftime('%Y-%m-%d') }}">
+                </div>
+                <div class="form-group">
+                    <label for="expiry_date">Expiry Date</label>
+                    <input type="date" id="expiry_date" name="expiry_date"
+                        value="{{ cert.expiry_date.strftime('%Y-%m-%d') if cert.expiry_date else '' }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="tags">Tags <small>(comma separated)</small></label>
+                <input type="text" id="tags" name="tags" value="{{ cert.tags or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="file">Replace File <small>(optional – leave empty to keep current)</small></label>
+                <div class="file-upload" id="fileUploadArea">
+                    <i class="fas fa-cloud-arrow-up"></i>
+                    <p>Current: <strong>{{ cert.original_filename }}</strong></p>
+                    <p>Drag & drop or <span class="link">browse</span> to replace</p>
+                    <input type="file" id="file" name="file" accept=".pdf,.png,.jpg,.jpeg,.gif,.webp">
+                    <span class="file-name" id="fileName"></span>
+                </div>
+            </div>
+            <div class="form-actions">
+                <a href="{{ url_for('view_certificate', cert_id=cert.id) }}" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    const fileInput = document.getElementById('file');
+    const fileName = document.getElementById('fileName');
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) fileName.textContent = fileInput.files[0].name;
+    });
+</script>
+{% endblock %}
